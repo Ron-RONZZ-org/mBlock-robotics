@@ -1,7 +1,11 @@
 // bibliotekoj kaj variabloj tutmondaj
 
-#include "MeAuriga.h"
-#include "Wire.h"
+  #include <Arduino.h>
+  #include <Wire.h>
+  #include <SoftwareSerial.h>
+  
+  #include <MeAuriga.h>
+
 
 unsigned long currentTime;
 unsigned long lastPassTime = -3000;
@@ -24,6 +28,24 @@ int soundLevel;
 
 MeEncoderOnBoard motor1(SLOT1);
 MeEncoderOnBoard motor2(SLOT2);
+
+void isr_process_encoder1(void)
+{
+    if (digitalRead(motor1.getPortB()) == 0) {
+        motor1.pulsePosMinus();
+    } else {
+        motor1.pulsePosPlus();
+    }
+}
+
+void isr_process_encoder2(void)
+{
+    if (digitalRead(motor2.getPortB()) == 0) {
+        motor2.pulsePosMinus();
+    } else {
+        motor2.pulsePosPlus();
+    }
+}
 
 int motor1_v, motor2_v;
 bool moving=0;
@@ -51,6 +73,25 @@ void setup() {
   led.show();
   // Iniciigo de gyroskopo
   gyroSensor.begin();
+// Set PWM 8KHz
+  TCCR1A = _BV(WGM10);
+  TCCR1B = _BV(CS11) | _BV(WGM12);
+  TCCR2A = _BV(WGM21) | _BV(WGM20);
+  TCCR2B = _BV(CS21);
+
+  attachInterrupt(motor1.getIntNum(), isr_process_encoder1, RISING);
+  attachInterrupt(motor2.getIntNum(), isr_process_encoder2, RISING);
+
+  motor1.setPulse(9);
+  motor1.setRatio(39.267);
+  motor1.setPosPid(1.8, 0, 1.2);
+  motor1.setSpeedPid(0.18, 0, 0);
+
+  motor2.setPulse(9);
+  motor2.setRatio(39.267);
+  motor2.setPosPid(1.8, 0, 1.2);
+  motor2.setSpeedPid(0.18, 0, 0);
+  delay(500);
   motor1.move(-360,150);
   motor2.move(360,150);
 }

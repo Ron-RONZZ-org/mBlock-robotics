@@ -1,7 +1,12 @@
-# mBlock ranger Arduino programming examples
+# mBlock Ranger Arduino sketches
 
-This repository contains Arduino programs for the mBlock ranger robot.
+Arduino `.ino` examples for mBot Ranger / Me Auriga, including sensor, LED, motion, and control-loop exercises.
 
-## Learning resources
+## Included exercise sets
 
-![official guide](https://support.makeblock.com/hc/en-us/articles/1500004053721-Programming-mBot-Ranger-in-Arduino)
+- Reimplemented TP exercises: `1-*` to `10-*`, and `13-*` to `18-*`
+- Existing sketches: `11-*` to `31-*`
+
+## Learning resource
+
+- https://support.makeblock.com/hc/en-us/articles/1500004053721-Programming-mBot-Ranger-in-Arduino
